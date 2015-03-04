@@ -9,8 +9,8 @@ div.lamp{
 	background-image:url('lamp.png');
 	/*background-size: 150px 100px;*/
 	background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: 15px 15px; 
+    	background-attachment: fixed;
+    	background-position: 15px 15px; 
 }
 </style>
 </head>
