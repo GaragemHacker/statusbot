@@ -1,8 +1,8 @@
 //GaragemHacker - StatusBot
 /*
 --> babysteps desse projeto
-Objetivo: Requisiatar uma pagina web usando metodo get para
-inidicar se o hackerspace esta aberto ou fechado.
+Objetivo: Requisitar uma pagina web usando metodo get para
+indicar se o hackerspace esta aberto ou fechado.
 
 - Arduino Ethercard ENC28J60 https://github.com/jcw/ethercard
 - Este bot deve usar DHCP com MAC Amarrado ao nosso servidor local
