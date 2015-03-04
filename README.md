@@ -12,3 +12,10 @@ Clever Joke Bot to make the Garage more acessible in the web
 
 Para passar o status do hackerspace como aberto, foi optado por usar o status.php que grava um arquivo status.txt com o estado do hackerspace. A requisicao e feito por um arduino com ethernet shield.
 
+### statusbot.ino
+
+Statusbot agora funciona com Arduino
+ * Recebe DHCP
+ * Imprime tudo que estiver colhendo em Serial
+ * Aceita requisicoes ping
+ * Faz UrlRequest
