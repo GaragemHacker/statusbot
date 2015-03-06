@@ -22,7 +22,7 @@ div.lamp{
 <?php
 if ($_GET["operacao"] === "abrir") {
 	echo "aberto\n";
-	// gravar "aceso" no status.txt
+	// gravar "acesso" no status.txt
 	$status = fopen("status.txt", "w") or die("OPS... nao gravou");	
 	$txt = "aberto\n";
 	fwrite($status, $txt);
