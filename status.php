@@ -1,22 +1,10 @@
 <html>
 <head>
 <title>GaragemHacker Status</title>
-
-<style>
-div.lamp{
-	width:150px;
-	height: 235px;
-	background-image:url('lamp.png');
-	/*background-size: 150px 100px;*/
-	background-repeat: no-repeat;
-    	background-attachment: fixed;
-    	background-position: 15px 15px; 
-}
-</style>
 </head>
 
 <body>
-<h3>Garagem Hacker - Curitiba HackerSpace</h3>
+
 
 <p>
 <?php
@@ -39,6 +27,7 @@ if ($_GET["operacao"] === "abrir") {
 }
 
 ?>
+<h3>Garagem Hacker - Curitiba HackerSpace</h3>
 <!--</p>
 
 <ul>

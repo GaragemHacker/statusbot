@@ -26,7 +26,7 @@ while True: #While Connection is Active
     if data.find(':'+nick+':') != -1:
         irc.send('PRIVMSG ' + chan + ' :Oi..., alguem falou comigo, eu ainda nao sei conversar... talvez outro dia eu lhe responda algo mais humano...\r\n')
     
-    #if data.find('PING') != -1: #If PING is Found in the Data
-    #    print data.find
-    #    irc.send('PONG ' + data.split()[1] + '\r\n') #Send back a PONG
+    if data.find('PING') != -1: #If PING is Found in the Data
+        print data.find
+        irc.send('PONG ' + data.split()[1] + '\r\n') #Send back a PONG
             

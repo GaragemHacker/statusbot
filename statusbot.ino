@@ -16,6 +16,10 @@ indicar se o hackerspace esta aberto ou fechado.
 //Incluindo a lib Ethercard --> https://github.com/jcw/ethercard/archive/master.zip
 #include <EtherCard.h>
 
+int led = 7; //iniciar led na porta 7
+int botao = 0; //iniciar botao na porta 6
+int estado = 0;
+
 //Iniciando o ethernet shield com o mac abaixo
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 byte Ethernet::buffer[700];
@@ -23,6 +27,8 @@ static uint32_t timer;
 
 //quem vou disparar o acesso
 const char website[] PROGMEM = "garagemhacker.org";
+
+//funcao para dnsLookup (traducao de ip)
 static void look(){
   //condicional para fazer o dnslookup para trazer o callback da requisicao
   if (!ether.dnsLookup(website))
@@ -68,30 +74,51 @@ static void dhcp() {
   ether.printIp("BROADCAST:  ", ether.broadcastip); //broadcast
   ether.printIp("DHCP server: ", ether.dhcpip); //servidor de onde veio o DHCP
 }
+
+//funcao para chavear a interrupcao 0 da porta 2 do UNO
+void mudachave() {
+  estado = !estado;
+  digitalWrite(led, estado);
+}
+
+
 //Inicializacao dos recursos.  
 void setup() {
+  pinMode (led, OUTPUT);
+  pinMode (botao, INPUT);
   Serial.begin(57600);//usamos serial para ecos dos dados.
   Serial.println(F("Iniciando"));
   
+   //Attach the interrupt to the input pin and monitor for ANY Change 
+  attachInterrupt(botao, mudachave, CHANGE);
+ 
   dhcp(); //chama a funcao pra iniciar o dhcp
   look();
   ether.registerPingCallback(pingado);//chama esse report para receber os pings
-  //ether.parseIp(ether.hisip, "10.10.10.10");
+  //ether.parseIp(ether.hisip, "10.10.10.10");//Seta um ip em hisip
+  
   
 }
 
 void loop () {
+   
+  //Receber pings e troca de dados
   word len = ether.packetReceive(); //permite receber pacotes
   word pos = ether.packetLoop(len); //responde os pings que entrarem
-  
+
  //faz uma requisicao para a cada 15 segundos
   if (millis() > timer) {
     timer = millis() + 15000;
     Serial.println();
     Serial.print("<<< REQ ");
-    ether.browseUrl(PSTR("/status.php?"), "operacao=abrir", website, get_callback);
-   }
-   
+    if (estado == 0){
+      ether.browseUrl(PSTR("/status.php?"), "operacao=fechar", website, get_callback);
+    }
+    if (estado == 1) {
+      ether.browseUrl(PSTR("/status.php?"), "operacao=abrir", website, get_callback);
+    }
+    Serial.println(estado);//Habilite apenas para debug
+  }
 }
   
   
