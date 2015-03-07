@@ -19,3 +19,10 @@ Statusbot agora funciona com Arduino
  * Imprime tudo que estiver colhendo em Serial
  * Aceita requisicoes ping
  * Faz UrlRequest
+
+### ircbot.py
+
+Chatter bot, para notificao de status com WhatsApp e IRC
+ * Notificao de presenca no HackerSpace pelo IRC
+ * Aviso da abertura para WhatsApp com integracao ao yowsup
+ * Vocabulario atrevido de respostas
