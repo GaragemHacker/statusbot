@@ -26,12 +26,12 @@ more docs:
 import socket
 
 #Global Vars
-NICK = 'r0bot' #define nick
-PASS = '?????' #the password
+NICK = 'botnick' #define nick
+PASS = '????' #the password
 DEBUG = True # For debug Mode
 NETWORK = "irc.freenode.net" #Define IRC Network
 PORT = 6667 #Define IRC Server Port
-CHAN = '#garagemhacker' #The IRC Channel
+CHAN = '#debugthisr0bot' #The IRC Channel
 
 ########
 #Begin of server signals
@@ -45,7 +45,23 @@ irc.send('USER '+ NICK + ' ' + NICK + ' Bot: '+ NICK + '\r\n') #send user info t
 irc.send('NICKSERV IDENTIFY ' + PASS + '\r\n') #msg nickserv identify
 irc.send('JOIN ' + CHAN + '\r\n') #Join the channel
 irc.send('NOTICE ' + CHAN + ' :Oi eu sou o StatusBot da Garagem. Ainda estou em testes...\r\n') #send notice to the channel
-#irc.send('QUIT ' + CHAN + ': Ill be back') #my quit message
+#irc.send('QUIT :Ill be back...') #my quit message
+
+########
+#Begin functions
+#######
+
+def pongs():#Antes de tudo, responda os pings dos servidores
+    if data[0] == 'PING': #opa recebi um PING do server
+        irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
+        #print data #somente para debug do pong
+
+
+def voce():
+    prenick = data[0].find(':')
+    posnick = data[0].find('!',prenick)
+    youare = data[0][prenick+1:posnick]
+    return youare;
 
 
 ########
@@ -53,15 +69,24 @@ irc.send('NOTICE ' + CHAN + ' :Oi eu sou o StatusBot da Garagem. Ainda estou em 
 #######
 while True: #While Connection is Active
     data = irc.recv (4096) #Make Data the Receive Buffer
-    print data #Print the Data to the console(For debug purposes)
+    #print data #Print the Data to the console(For debug purposes)
+    data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|
     
-    #Antes de tudo, responda os pings dos servidores
-    if data.find('PING') != -1: #If PING is Found in the Data
-        print data.find
-        irc.send('PONG ' + data.split()[1] + '\r\n') #Send back a PONG
+    pongs()
     
-    #Inicio das piadas
-    if data.find(':'+NICK+':') != -1:
-        irc.send('PRIVMSG ' + CHAN + ''' :Oi, alguem falou comigo. 
-        Eu ainda nao sei conversar... talvez outro dia eu lhe responda algo mais humano...\r\n''')
+    count = 0
+    for linhas in data: #this for is only util during debug and development od this bot
+        print "imprimindo o valor: ",count, "de ",linhas
+        count= count + 1
+    
+   
+    
+    #Encontrar mensagens enviadas a mim
+    if data[1] == 'PRIVMSG' and data[2] == NICK: #se recebi uma mensagem pvt
+        print 'Opa achei uma mensagem PVT pra mim'
+        print "Recebi mensagem de",voce()
+        irc.send('PRIVMSG '+voce()+" :Ola "+voce()+" ainda nao sei conversar, me chame quando eu me tornar mais social!\r\n")
+    elif data[1] == 'PRIVMSG' and NICK in data[3]: #se recebi uma mensagem pelo canal
+        print "Falaram comigo pelo canal: ",data[2]
+        irc.send('PRIVMSG ' + CHAN + " :Oi "+voce()+". Eu ainda nao sei conversar... talvez outro dia eu lhe responda algo mais humano...\r\n")
         
