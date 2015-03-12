@@ -1,7 +1,7 @@
 # statusbot
 Clever Joke Bot to make the Garage more acessible in the web
 
-### Anseios (to-do's)
+### Task's (to-do's)
 
  * Python Chatter Bot on IRC
  * HackerSpace Door status
@@ -12,13 +12,26 @@ Clever Joke Bot to make the Garage more acessible in the web
 
 Para passar o status do hackerspace como aberto, foi optado por usar o status.php que grava um arquivo status.txt com o estado do hackerspace. A requisicao e feito por um arduino com ethernet shield.
 
-### statusbot.ino
+-------
 
-Statusbot agora funciona com Arduino
- * Recebe DHCP
- * Imprime tudo que estiver colhendo em Serial
- * Aceita requisicoes ping
- * Faz UrlRequest
+### statusbot(_turnkey/push).ino
+
+Statusbot task's com Arduino
+ - [x] Receber DHCP
+ - [x] Imprimir tudo que estiver colhendo em Serial
+ - [x] Aceitar requisicoes ping
+ - [x] Fazer UrlRequest <i>(quando o estado se alterar)</i>
+ - [ ] Twittar Status
+
+Estou deixando para estudo de caso duas versões diferentes para arduino.
+A versao <i>"turnkey"</i> usa a interrupcao como leitura e pode ser usado com botoes tradicionais tipo switch.
+
+#### Exemplos de botoes
+<img src="https://github.com/Garagem-Hacker/statusbot/blob/master/img/switch-button.jpg" />  | <img src="https://github.com/Garagem-Hacker/statusbot/blob/master/img/push-button.jpg" />
+------------- | -------------
+<i>Switch Gangorra</i>  | <i>Push button</i>
+
+-------
 
 ### ircbot.py
 
