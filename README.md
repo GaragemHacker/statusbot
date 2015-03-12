@@ -24,7 +24,7 @@ Statusbot task's com Arduino
  - [ ] Twittar Status
 
 Estou deixando para estudo de caso duas versões diferentes para arduino.
-A versao <i>"turnkey"</i> usa a interrupcao como leitura e pode ser usado com botoes tradicionais tipo switch.
+A versao <i>"turnkey"</i> usa a interrupcao como leitura e pode ser usado com botoes tradicionais tipo switch. O arquivo statusbot_push.ino tem um algoritimo que ira funcionar com botoes <i>"push"</i>. 
 
 #### Exemplos de botoes
 <img src="https://github.com/Garagem-Hacker/statusbot/blob/master/img/switch-button.jpg" />  | <img src="https://github.com/Garagem-Hacker/statusbot/blob/master/img/push-button.jpg" />
