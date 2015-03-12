@@ -4,6 +4,11 @@
 Objetivo: Requisitar uma pagina web usando metodo get para
 indicar se o hackerspace esta aberto ou fechado.
 
+Versao --> botao switch (turnkey/gangorra)
+
+Nesta versao usamos uma interrupcao do Arduino para fazer a inversao de estado usando uma funcao mudachave.
+*** Com esta IRQ o ideal é usarmos um botao tipo switch ***
+
 - Arduino Ethercard ENC28J60 https://github.com/jcw/ethercard
 - Este bot deve usar DHCP com MAC Amarrado ao nosso servidor local
 - Caso conectemos via serial ele deve ecoar todos os parametros que ele possui
