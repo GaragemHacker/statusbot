@@ -14,7 +14,7 @@ Para passar o status do hackerspace como aberto, foi optado por usar o status.ph
 
 -------
 
-### statusbot(_turnkey/push).ino
+### statusbot(turnkey/push).ino
 
 Statusbot task's com Arduino
  - [x] Receber DHCP
@@ -39,3 +39,10 @@ Chatter bot, para notificao de status com WhatsApp e IRC
  * Notificao de presenca no HackerSpace pelo IRC
  * Aviso da abertura para WhatsApp com integracao ao yowsup
  * Vocabulario atrevido de respostas
+
+
+-------
+
+### wp_api.js (html)
+Pequena api para mudar o estado da lampada no site da garagem
+
