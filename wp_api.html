@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Garagem Status WP_API</title>
+
+
+<script type="text/javascript">
+window.onload=function start() {
+
+//var xmlhttp, text;
+var xmlhttp;
+xmlhttp = new XMLHttpRequest();
+xmlhttp.open('GET', 'http://www.garagemhacker.org/status.txt', true);
+xmlhttp.send();
+
+//text = xmlhttp.responseText; //get the response on text var
+
+xmlhttp.onreadystatechange=function(){
+  if (xmlhttp.readyState==4 && xmlhttp.status==200){
+  	if(xmlhttp.responseText.trim() == 'fechado'){
+    	document.getElementById("lamp").innerHTML=xmlhttp.responseText;
+    	//console.log(xmlhttp); //Somente para Debug
+    	
+    	}
+    else if (xmlhttp.responseText.trim() == 'aberto') {
+   		//document.getElementById("real").innerText=xmlhttp.responseText;//Use para requisicoes sincronas
+    	document.getElementById("lamp").innerHTML=xmlhttp.responseText;
+    	}
+    }
+  }
+}
+
+</script>
+
+
+
+</script>
+</head>
+<body>
+
+
+</head>
+
+
+<body>
+
+<h1>Garagem Hacker - Teste de Status</h1>
+
+</br>
+
+<!-- Mudar imagem da lampada aqui -->
+<p id="lamp"></p> 
+ 
+
+
+</body>
+</html>
