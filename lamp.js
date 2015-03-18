@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-<title>Garagem Status WP_API</title>
-
-
-<script type="text/javascript">
 window.onload=function start() {
 
-//var xmlhttp, text;
+//var xmlhttp, text; //algumas variaveis de debug
 var xmlhttp;
 xmlhttp = new XMLHttpRequest();
 xmlhttp.open('GET', 'http://www.garagemhacker.org/status.txt', true);
@@ -30,29 +22,3 @@ xmlhttp.onreadystatechange=function(){
     }
   }
 }
-
-</script>
-
-
-
-</script>
-</head>
-<body>
-
-
-</head>
-
-
-<body>
-
-<h1>Garagem Hacker - Teste de Status</h1>
-
-</br>
-
-<!-- Mudar imagem da lampada aqui -->
-<p id="lamp"></p> 
- 
-
-
-</body>
-</html>
