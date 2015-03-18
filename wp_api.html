@@ -24,7 +24,7 @@ xmlhttp.onreadystatechange=function(){
     	
     	}
     else if (xmlhttp.responseText.trim() == 'aberto') {
-   		//document.getElementById("real").innerText=xmlhttp.responseText;//Use para requisicoes sincronas
+   		//document.getElementById("real").innerText=xmlhttp.responseText;//Use para requisicoes sincronas com xmlhttp false
     	document.getElementById("lamp").innerHTML=xmlhttp.responseText;
     	}
     }
