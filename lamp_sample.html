@@ -2,21 +2,31 @@
 <html>
 
 <head>
-<title>Garagem Status WP_API</title>
+<title>Garagem Status API</title>
 <script src="lamp.js" type="text/javascript"></script>
 
 
-</head>
-<body>
-</head>
-<body>
-<h1>Garagem Hacker - Teste de Status</h1>
-</br>
+<style>
+.lamp{
+    width:95px;
+    height:250px;
+    background-image:url('img/lamp.png');
+    //background-size: 150px 100px;//just for change the size of images
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: -85px 85px;//lamp off
+    //background-position: 10px 85px;//lamp on 
+}
+</style>
 
-<!-- Mudar imagem da lampada aqui -->
-<p id="lamp"></p> 
- 
+</head>
 
+<body>
+    <h1>Garagem Hacker - Teste de Status</h1>
+    </br>
+    
+    <!-- Mudar imagem da lampada aqui -->
+    <div id="lamp" class="lamp"></div> 
 
 </body>
 </html>
