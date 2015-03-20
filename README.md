@@ -43,6 +43,10 @@ Chatter bot, para notificao de status com WhatsApp e IRC
 
 -------
 
-### wp_api.js (html)
-Pequena api para mudar o estado da lampada no site da garagem
+### lamp.js (lamp_sample.html)
+Pequeno exemplo de como usar a API para colher o estadoda garagem.
+Este exemplo usa um javascript que colhe o estado do arquivo status.txt e quando aberto mostra uma lampada acesa no html. Quando apagado mostra uma lampada apagada.
+
+<img src="https://github.com/Garagem-Hacker/statusbot/blob/master/img/lamp.png" />
+<i>Lampada usada no site da <a href="garagemhacker.org">garagemhacker</a></i>
 
