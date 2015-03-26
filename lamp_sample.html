@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Sample for using a lamp to take status from garagemhacker.org -->
 <html>
 
 <head>
@@ -7,16 +8,27 @@
 
 
 <style>
-.lamp{
-    width:95px;
-    height:250px;
-    background-image:url('img/lamp.png');
+.lampon{
+    width:113px;
+    height:291px;
+    background-image:url('img/lampon.png');
     //background-size: 150px 100px;//just for change the size of images
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: -85px 85px;//lamp off
+    //background-repeat: no-repeat;
+    //background-attachment: fixed;
+    //background-position: -85px 85px;//lamp off
     //background-position: 10px 85px;//lamp on 
 }
+
+.lampoff{
+    width:80px;
+    height:290px;
+    background-image:url('img/lampoff.png');
+    background-repeat: no-repeat;
+}
+
+
+
+
 </style>
 
 </head>
@@ -26,7 +38,7 @@
     </br>
     
     <!-- Mudar imagem da lampada aqui -->
-    <div id="lamp" class="lamp"></div> 
+    <div id="lamp" class="none"></div> 
 
 </body>
 </html>

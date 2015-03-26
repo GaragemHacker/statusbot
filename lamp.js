@@ -23,19 +23,22 @@ xmlhttp.onreadystatechange=function(){
 status = xmlhttp.responseText;//get the response on status var
 
 if (xmlhttp.readyState==4 && xmlhttp.status==200){
-    if(status.trim() == 'fechado'){
-        //Change element to lamp off
-        document.getElementById("lamp").style.backgroundPosition=("-85px 85px");
-        //document.getElementById("lamp").innerHTML=status;//show content of the status.txt file
-        //console.log(xmlhttp); //Somente para Debug
-        }
+    
+        if(status.trim() == 'fechado'){
+            //Change element to lamp off
+            //document.getElementById("lamp").style.backgroundPosition=("-85px 85px");//sample to change position
+            document.getElementById("lamp").className=("lampoff");//sample to change class
+            //document.getElementById("lamp").innerHTML=status;//show content of the status.txt file
+            //console.log(xmlhttp); //Somente para Debug
+            }
         else if (status.trim() == 'aberto') {
             //Change element to lamp on
-            document.getElementById("lamp").style.backgroundPosition=("10px 85px");
+            //document.getElementById("lamp").style.backgroundPosition=("10px 85px");
+            document.getElementById("lamp").className=("lampon");//sample to change class
             //document.getElementById("real").innerText=xmlhttp.responseText;//Use para requisicoes sincronas com xmlhttp false
             //document.getElementById("lamp").innerHTML=status;//show content of the status.txt file
             }
         //console.log(xmlhttp);//uncoment for a fully debug for if end else if condition
-        }
+        }//close the xmlhttp.reasState if
     }//close the xmlhttp.onreadystatechange
 }//close start
