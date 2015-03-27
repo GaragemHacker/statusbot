@@ -22,6 +22,7 @@ more docs:
         https://tools.ietf.org/html/rfc1459 --> IRC RFC, muito util, especialmente pelos IRC SIGNAL'S (NICK,JOIN etc...)
         http://garagemhacker.org/wiki/doku.php/projetos/todos/statusbot.txt
 """
+import sys
 import urllib
 import socket
 
@@ -61,9 +62,11 @@ def status():
         filenow.write(GARAGESTATE)
         filenow = open(STATEFILE, 'r')
     if filenow.read() == GARAGESTATE:
-        print 'A garagem ainda esta', GARAGESTATE, 'nao mudarei nada'
+        print 'A garagem ainda esta', GARAGESTATE, 'nao mudarei nada', filenow.read()
+        filenow.close()
     else:
         print 'A garagem agora esta', GARAGESTATE, 'vou salvar o novo status'
+        filenow.close()
         filenow = open(STATEFILE, 'w')
         filenow.write(GARAGESTATE)
         filenow = open(STATEFILE, 'r')
@@ -75,12 +78,11 @@ def status():
             irc.send('PRIVMSG ' + CHAN + " :Yuhuuuuu vamo la galera o HackerSpace esta ABERTO!!!! ;)\r\n")
 
 
-
 def pongs():#Antes de tudo, responda os pings dos servidores
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         #print data #somente para debug do pong
-        status() #when recive the pong check for new state
+        #status() #when recive the pong check for new state
 
 
 def voce():
@@ -95,20 +97,21 @@ def voce():
 ########
 #Begin of bot body
 #######
+
 while True: #While Connection is Active
     data = irc.recv (4096) #Make Data the Receive Buffer
     #print data #Print the Data to the console(For debug purposes)
-    data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|
-    
+    data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
     pongs()
-    
+    status()
+
     count = 0
     for linhas in data: #this for is only util during debug and development od this bot
         print "imprimindo o valor: ",count, "de ",linhas
         count= count + 1
     
    
-    
+     
     #Encontrar mensagens enviadas a mim
     if data[1] == 'PRIVMSG' and data[2] == NICK: #se recebi uma mensagem pvt
         print 'Opa achei uma mensagem PVT pra mim'
