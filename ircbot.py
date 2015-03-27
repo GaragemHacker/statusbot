@@ -22,7 +22,7 @@ more docs:
         https://tools.ietf.org/html/rfc1459 --> IRC RFC, muito util, especialmente pelos IRC SIGNAL'S (NICK,JOIN etc...)
         http://garagemhacker.org/wiki/doku.php/projetos/todos/statusbot.txt
 """
-
+import urllib
 import socket
 
 #Global Vars
@@ -32,7 +32,8 @@ DEBUG = True # For debug Mode
 NETWORK = "irc.freenode.net" #Define IRC Network
 PORT = 6667 #Define IRC Server Port
 CHAN = '#debugthisr0bot' #The IRC Channel
-
+GARAGESTATE= urllib.urlopen('http://garagemhacker.org/status.txt').read().rstrip()
+STATEFILE = 'garagenow'
 ########
 #Begin of server signals
 #######
@@ -50,11 +51,30 @@ irc.send('NOTICE ' + CHAN + ' :Oi eu sou o StatusBot da Garagem. Ainda estou em 
 ########
 #Begin functions
 #######
+def status():
+    try:
+        print 'Arquivo ok'
+        filenow = open(STATEFILE, 'r')
+    except:
+        print 'Essa eh minha primeira vez, vou criar um arquivo novo'
+        filenow = open(STATEFILE, 'a')
+        filenow.write(GARAGESTATE)
+        filenow = open(STATEFILE, 'r')
+    if filenow == GARAGESTATE:
+        print 'A garagem ainda esta', GARAGESTATE, 'nao mudarei nada'
+    else:
+        print 'A garagem agora esta', GARAGESTATE, 'vou salvar o novo status'
+        filenow = open(STATEFILE, 'w')
+        filenow.write(GARAGESTATE)
+        filenow = open(STATEFILE, 'r')
+        filenow.read()
+        filenow.close()
 
 def pongs():#Antes de tudo, responda os pings dos servidores
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         #print data #somente para debug do pong
+        status()
 
 
 def voce():
@@ -62,6 +82,8 @@ def voce():
     posnick = data[0].find('!',prenick)
     youare = data[0][prenick+1:posnick]
     return youare;
+
+
 
 
 ########
