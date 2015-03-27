@@ -33,7 +33,6 @@ DEBUG = True # For debug Mode
 NETWORK = "irc.freenode.net" #Define IRC Network
 PORT = 6667 #Define IRC Server Port
 CHAN = '#debugthisr0bot' #The IRC Channel
-GARAGESTATE= urllib.urlopen('http://garagemhacker.org/status.txt').read().rstrip()
 STATEFILE = 'garagenow'
 ########
 #Begin of server signals
@@ -53,6 +52,7 @@ irc.send('NOTICE ' + CHAN + ' :Oi eu sou o StatusBot da Garagem. Ainda estou em 
 #Begin functions
 #######
 def status():
+    GARAGESTATE= urllib.urlopen('http://garagemhacker.org/status.txt').read().rstrip()
     try:
         print 'Arquivo ok'
         filenow = open(STATEFILE, 'r')
