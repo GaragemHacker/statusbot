@@ -60,7 +60,7 @@ def status():
         filenow = open(STATEFILE, 'a')
         filenow.write(GARAGESTATE)
         filenow = open(STATEFILE, 'r')
-    if filenow == GARAGESTATE:
+    if filenow.read() == GARAGESTATE:
         print 'A garagem ainda esta', GARAGESTATE, 'nao mudarei nada'
     else:
         print 'A garagem agora esta', GARAGESTATE, 'vou salvar o novo status'
@@ -69,12 +69,18 @@ def status():
         filenow = open(STATEFILE, 'r')
         filenow.read()
         filenow.close()
+        if GARAGESTATE == 'fechado':
+            irc.send('PRIVMSG ' + CHAN + " :Heyyyy a garagem agora esta fechada!!!!!\r\n")
+        else:
+            irc.send('PRIVMSG ' + CHAN + " :Yuhuuuuu vamo la galera o HackerSpace esta ABERTO!!!! ;)\r\n")
+
+
 
 def pongs():#Antes de tudo, responda os pings dos servidores
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         #print data #somente para debug do pong
-        status()
+        status() #when recive the pong check for new state
 
 
 def voce():
