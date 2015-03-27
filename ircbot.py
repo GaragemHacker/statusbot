@@ -82,7 +82,7 @@ def pongs():#Antes de tudo, responda os pings dos servidores
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         #print data #somente para debug do pong
-        #status() #when recive the pong check for new state
+        status() #when recive the pong check for new state
 
 
 def voce():
@@ -103,7 +103,6 @@ while True: #While Connection is Active
     #print data #Print the Data to the console(For debug purposes)
     data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
     pongs()
-    status()
 
     count = 0
     for linhas in data: #this for is only util during debug and development od this bot
