@@ -8,19 +8,19 @@ indicar se o hackerspace esta aberto ou fechado.
 - Este bot deve usar DHCP com MAC Amarrado ao nosso servidor local
 - Caso conectemos via serial ele deve ecoar todos os parametros que ele possui
 - Pode receber pings para mostar que esta vivo
-- Se o status do botao ligado deve requisitar a pagina para abrir
-- Se o status do botao for desligado deve requisitar a pagina para fechar
+- Se o status do botao estiver ligado deve requisitar a pagina para abrir e acender o led verde
+- Se o status do botao for desligado deve requisitar a pagina para fechar e acender o led vermelho
 
 */
 
 //Incluindo a lib Ethercard --> https://github.com/jcw/ethercard/archive/master.zip
 #include <EtherCard.h>
 
-int ledgreen = 7; //iniciar led na porta 7
-int ledred = 6;
+int ledgreen = 7; //iniciar led verde na porta 7
+int ledred = 6; //iniciar led vermelho na porta 6
 int botao = 2; //iniciar botao na porta 6
-int buttonState;             // the current reading from the input pin
-int lastButtonState = LOW;
+int buttonState;//the current reading from the input pin
+int lastButtonState = LOW;//set lastbutton state to LOW
 
 
 //Iniciando o ethernet shield com o mac abaixo
@@ -78,7 +78,7 @@ static void dhcp() {
   ether.printIp("DHCP server: ", ether.dhcpip); //servidor de onde veio o DHCP
 }
 
-
+//funcao para alternar os leds pelo estado do botao
 static void ledchange(){
 // set initial LED state  
   int reading = digitalRead(botao);
@@ -91,7 +91,9 @@ static void ledchange(){
       digitalWrite(ledgreen,HIGH);
   }
 }
-//My debouncing settings
+
+
+//My debouncing settings (solve button debouce)
 long lastDebounceTime = 0; 
 long debounceDelay = 50;
 
@@ -108,8 +110,8 @@ void setup() {
   ether.registerPingCallback(pingado);//chama esse report para receber os pings
   //ether.parseIp(ether.hisip, "10.10.10.10");//Seta um ip em hisip
 
-//debounce setup
- ledchange();
+  //iniciar com o led na mesma posicao do botao
+  ledchange();
   
 }
 
@@ -135,11 +137,11 @@ void loop () {
       ledchange();
       if (buttonState == HIGH){
         Serial.println("abriu!!! ;p");
-        ether.browseUrl(PSTR("/status.php?"), "cmd=abrirx74x54", website, get_callback);
+        ether.browseUrl(PSTR("/status.php?"), "operacao=abrir", website, get_callback);
       }
       else{
         Serial.println("fechou!!! ;(");
-        ether.browseUrl(PSTR("/status.php?"), "cmd=fecharx74x54", website, get_callback);
+        ether.browseUrl(PSTR("/status.php?"), "operacao=fechar", website, get_callback);
       }
     }
   }
@@ -151,5 +153,3 @@ void loop () {
   lastButtonState = reading;
 
 }
-  
-  

@@ -25,6 +25,7 @@ more docs:
 import sys
 import urllib
 import socket
+from time import sleep
 
 #Global Vars
 NICK = 'botnick' #define nick
@@ -81,7 +82,8 @@ def status():
 def pongs():#Antes de tudo, responda os pings dos servidores
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
-        #print data #somente para debug do pong
+        print data #somente para debug do pong
+        sleep(0.5)#whait 5 seconds
         status() #when recive the pong check for new state
 
 
