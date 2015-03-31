@@ -28,8 +28,8 @@ import socket
 from time import sleep
 
 #Global Vars
-NICK = 'b0tnick' #define nick
-PASS = '?????' #the password
+NICK = 'botnick' #define nick
+PASS = '????' #the password
 DEBUG = True # For debug Mode
 NETWORK = "irc.freenode.net" #Define IRC Network
 PORT = 6667 #Define IRC Server Port
@@ -53,6 +53,9 @@ irc.send('NOTICE ' + CHAN + ' :Oi eu sou o StatusBot da Garagem. Ainda estou em 
 #Begin functions
 #######
 def status():
+"""======= status ========
+    * this function make this bot say to the channel if the HackerSpace are open or closed 
+"""
     GARAGESTATE= urllib.urlopen('http://garagemhacker.org/status.txt').read().rstrip()
     try:
         print 'Arquivo ok'
@@ -79,7 +82,11 @@ def status():
             irc.send('PRIVMSG ' + CHAN + " :Yuhuuuuu vamo la galera o HackerSpace esta ABERTO!!!! ;)\r\n")
 
 
-def pongs():#Antes de tudo, responda os pings dos servidores
+def pongs():
+"""======= pongs ========
+    * Antes de tudo, responda os pings dos servidores (funcao para mandar pongs)
+"""
+
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         print data #somente para debug do pong
@@ -87,33 +94,25 @@ def pongs():#Antes de tudo, responda os pings dos servidores
 
 
 def voce():
+"""======= voce ========
+    * this functions discover who you are
+"""
     prenick = data[0].find(':')
     posnick = data[0].find('!',prenick)
     youare = data[0][prenick+1:posnick]
     return youare;
 
 def voice():
+"""======= voice ========
+    * this function auto voice new joiner's
+"""
     if data[1] == 'JOIN':
         irc.send('MODE ' +CHAN+ ' +v: '+voce()+ '\r\n')#give voices to new joins
 
-########
-#Begin of bot body
-#######
-
-while True: #While Connection is Active
-    data = irc.recv (4096) #Make Data the Receive Buffer
-    #print data #Print the Data to the console(For debug purposes)
-    data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
-    pongs()
-
-    voice()
-    count = 0
-    for linhas in data: #this for is only util during debug and development od this bot
-        print "imprimindo o valor: ",count, "de ",linhas
-        count= count + 1
-    
-   
-     
+def mesgtome():
+"""======= mesgtome ========
+    * if someone talk to me i will do this code
+"""
     #Encontrar mensagens enviadas a mim
     if data[1] == 'PRIVMSG' and data[2] == NICK: #se recebi uma mensagem pvt
         print 'Opa achei uma mensagem PVT pra mim'
@@ -123,3 +122,27 @@ while True: #While Connection is Active
         print "Falaram comigo pelo canal: ",data[2]
         irc.send('PRIVMSG ' + CHAN + " :Oi "+voce()+". Eu ainda nao sei conversar... talvez outro dia eu lhe responda algo mais humano...\r\n")
         
+
+
+########
+#Begin of bot body
+#######
+
+while True: #While Connection is Active
+    data = irc.recv (4096) #Make Data the Receive Buffer
+    
+    #======= Bot Functions ======== # 
+    pongs()     #first of all --> respond pings with this pong's
+    voice()     #Gives voice mode to all new joiner's
+    mesgtome()  #Detect and reply messages to this bot
+
+    #======= Debug's ======== #   
+    #print data #Print the Data to the console(For debug purposes)
+    data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
+    count = 0
+    for linhas in data: #this is only util during debug and development of this bot
+        print "imprimindo o valor: ",count, "de ",linhas
+        count= count + 1
+    
+    
+    
