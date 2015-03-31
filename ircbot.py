@@ -28,8 +28,8 @@ import socket
 from time import sleep
 
 #Global Vars
-NICK = 'botnick' #define nick
-PASS = '????' #the password
+NICK = 'b0tnick' #define nick
+PASS = '?????' #the password
 DEBUG = True # For debug Mode
 NETWORK = "irc.freenode.net" #Define IRC Network
 PORT = 6667 #Define IRC Server Port
@@ -83,7 +83,6 @@ def pongs():#Antes de tudo, responda os pings dos servidores
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         print data #somente para debug do pong
-        sleep(0.5)#whait 5 seconds
         status() #when recive the pong check for new state
 
 
@@ -93,8 +92,9 @@ def voce():
     youare = data[0][prenick+1:posnick]
     return youare;
 
-
-
+def voice():
+    if data[1] == 'JOIN':
+        irc.send('MODE ' +CHAN+ ' +v: '+voce()+ '\r\n')#give voices to new joins
 
 ########
 #Begin of bot body
@@ -106,6 +106,7 @@ while True: #While Connection is Active
     data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
     pongs()
 
+    voice()
     count = 0
     for linhas in data: #this for is only util during debug and development od this bot
         print "imprimindo o valor: ",count, "de ",linhas
