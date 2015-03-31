@@ -38,6 +38,7 @@ A versao <i>"turnkey"</i> usa a interrupcao como leitura e pode ser usado com bo
 Chatter bot, para notificao de status com WhatsApp e IRC
  * Notificao de presenca no HackerSpace pelo IRC
  * Aviso da abertura para WhatsApp com integracao ao yowsup
+ * Auto voices novos visitantes do canal
  * Vocabulario atrevido de respostas
 
 
