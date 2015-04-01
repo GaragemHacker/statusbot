@@ -28,13 +28,13 @@ import socket
 from time import sleep
 
 #Global Vars
-nick = 'botnick' #define nick
+nick = 'rob0tn1ck' #define nick
 passw = '????' #the password
-debug = True # For debug Mode
 ircsrv = "irc.freenode.net" #Define IRC Network
 port = 6667 #Define IRC Server Port
 chan = '#debugthisr0bot' #The IRC Channel
 statefile = 'garagenow'
+turnondebug = 'y' # y for show debug anithing else to no debug 
 
 ########
 #Begin functions
@@ -61,8 +61,8 @@ def status():
     
     garagestate = urllib.urlopen('http://garagemhacker.org/status.txt').read().rstrip()
     try:
-        print 'Arquivo ok'
         filenow = open(statefile, 'r')
+        print 'Que bom!!! O arquivo',statefile,'ja existe, seguindo em frente...'
     except:
         print 'Essa eh minha primeira vez, vou criar um arquivo novo'
         filenow = open(statefile, 'a')
@@ -73,7 +73,6 @@ def status():
         filenow.close()
     else:
         print 'A garagem agora esta', garagestate, 'vou salvar o novo status'
-        filenow.close()
         filenow = open(statefile, 'w')
         filenow.write(garagestate)
         filenow = open(statefile, 'r')
@@ -111,10 +110,10 @@ def voice():
 def mesgtome():
     #Encontrar mensagens enviadas a mim
     if data[1] == 'PRIVMSG' and data[2] == nick: #se recebi uma mensagem pvt
-        print "Recebi mensagem PVT de",voce()
+        print "Recebi mensagem PVT de",voce(),"dizendo:",data[3:]
         irc.send('PRIVMSG '+voce()+" :Ola "+voce()+" ainda nao sei conversar, me chame quando eu me tornar mais social!\r\n")
     elif data[1] == 'PRIVMSG' and nick in data[3]: #se recebi uma mensagem pelo canal
-        print "Falaram comigo pelo canal: ",data[2]
+        print voce(),"falou comigo pelo canal",chan,"e me disse:",data[3:]
         irc.send('PRIVMSG ' + chan + " :Oi "+voce()+". Eu ainda nao sei conversar... talvez outro dia eu lhe responda algo mais humano...\r\n")
         
 
@@ -122,11 +121,25 @@ def mesgtome():
 #    * put all debug's you want on loop here ;)
 def debug():
     #print data #Print the Data to the console(For debug purposes - HARD WAY TO READ)
+    print "Socket data buffer em --> ",len(data)#enable to see Socket buffer size
     count = 0 #best way to read print data
     for linhas in data: #this is only util during debug and development of this bot
         print "imprimindo o valor: ",count, "de ",linhas
         count= count + 1
-    print "###### FIM DA SESSAO ######", data[0]    
+    print "###### FIM DA SESSAO ######", data[0]
+    
+
+#======= silent ========
+#    * if debug is off silent function print silent messages to trace where bot stage are
+def silent():
+    
+    if data[1] == 'JOIN' and voce() == nick:
+        print "Beleza to dentro... entrei no canal",data[2]
+
+    if data[1] == "001":
+        print "Estou agora connectado em",data[0]
+        print "Meu nick name é", nick
+
 
 ########
 #Begin of bot body
@@ -137,7 +150,6 @@ while True:
 
     while True: #While Connection is Active
         data = irc.recv (4096) #Make Data the Receive Buffer
-        print "Socket data buffer em --> "+str(len(data))
         if len(data) == 0: #se o recv for zero quebre este loop e comece de novo
             print "Xiii caiu!!!"
             break   
@@ -151,6 +163,12 @@ while True:
         voice()#Gives voice mode to all new joiner's
         mesgtome()#Detect and reply messages to this bot
 
-        #======= Debug's ======== #   
-        debug()
+        #======= Debug's ======== #
+        if turnondebug == 'y':
+            debug()
+        else:
+            silent()
+
+
+
 
