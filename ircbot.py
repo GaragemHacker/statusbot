@@ -45,44 +45,47 @@ turnondebug = 'y' # y for show debug anithing else to no debug
 #irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #em testes AF_INET ipv4, STREAM
 irc = socket.socket()
 def connect():
-    irc.connect((ircsrv,port)) #Connect to Server
-    irc.recv (4096) #Setting up the Buffer
-    irc.send('NICK ' + nick + '\r\n') #Send our Nick(Notice the Concatenation)
-    irc.send('USER '+ nick + ' ' + nick + ' Bot: '+ nick + '\r\n') #send user info to the server
-    irc.send('NICKSERV IDENTIFY ' + passw + '\r\n') #msg nickserv identify
-    irc.send('JOIN ' + chan + '\r\n') #Join the channel
-    irc.send('NOTICE ' + chan + ' :Oi eu sou o StatusBot da Garagem. Ainda estou em testes...\r\n') #send notice to the channel
-    #irc.send('QUIT :Ill be back...') #my quit message
-
+    try:
+        irc.connect((ircsrv,port)) #Connect to Server
+        irc.recv (4096) #Setting up the Buffer
+        irc.send('NICK ' + nick + '\r\n') #Send our Nick(Notice the Concatenation)
+        irc.send('USER '+ nick + ' ' + nick + ' Bot: '+ nick + '\r\n') #send user info to the server
+        irc.send('NICKSERV IDENTIFY ' + passw + '\r\n') #msg nickserv identify
+        irc.send('JOIN ' + chan + '\r\n') #Join the channel
+        irc.send('NOTICE ' + chan + ' :Oi eu sou o StatusBot da Garagem. Ainda estou em testes...\r\n') #send notice to the channel
+        #irc.send('QUIT :Ill be back...') #my quit message
+    except:
+        print "Nao consegui conectar dessa vez, vou tentar de novo na proxima... :("
 
 #======= status ========
 # * this function make this bot say to the channel if the HackerSpace are open or closed
 def status():
-    
-    garagestate = urllib.urlopen('http://garagemhacker.org/status.txt').read().rstrip()
     try:
-        filenow = open(statefile, 'r')
-        print 'Que bom!!! O arquivo',statefile,'ja existe, seguindo em frente...'
-    except:
-        print 'Essa eh minha primeira vez, vou criar um arquivo novo'
-        filenow = open(statefile, 'a')
-        filenow.write(garagestate)
-        filenow = open(statefile, 'r')
-    if filenow.read() == garagestate:
-        print 'A garagem ainda esta', garagestate, 'nao mudarei nada', filenow.read()
-        filenow.close()
-    else:
-        print 'A garagem agora esta', garagestate, 'vou salvar o novo status'
-        filenow = open(statefile, 'w')
-        filenow.write(garagestate)
-        filenow = open(statefile, 'r')
-        filenow.read()
-        filenow.close()
-        if garagestate == 'fechado':
-            irc.send('PRIVMSG ' + chan + " :Heyyyy a garagem agora esta fechada!!!!!\r\n")
+        garagestate = urllib.urlopen('http://garagemhacker.org/status.txt').read().rstrip()
+        try:
+            filenow = open(statefile, 'r')
+            print 'Que bom!!! O arquivo',statefile,'ja existe, seguindo em frente...'
+        except:
+            print 'Essa eh minha primeira vez, vou criar um arquivo novo'
+            filenow = open(statefile, 'a')
+            filenow.write(garagestate)
+            filenow = open(statefile, 'r')
+        if filenow.read() == garagestate:
+            print 'A garagem ainda esta', garagestate, 'nao mudarei nada', filenow.read()
+            filenow.close()
         else:
-            irc.send('PRIVMSG ' + chan + " :Yuhuuuuu vamo la galera o HackerSpace esta ABERTO!!!! ;)\r\n")
-
+            print 'A garagem agora esta', garagestate, 'vou salvar o novo status'
+            filenow = open(statefile, 'w')
+            filenow.write(garagestate)
+            filenow = open(statefile, 'r')
+            filenow.read()
+            filenow.close()
+            if garagestate == 'fechado':
+                irc.send('PRIVMSG ' + chan + " :Heyyyy a garagem agora esta fechada!!!!!\r\n")
+            else:
+                irc.send('PRIVMSG ' + chan + " :Yuhuuuuu vamo la galera o HackerSpace esta ABERTO!!!! ;)\r\n")
+    except:
+            print "Ups... nao consegui resolver nesse, tento mais uma vez na proxima ;)"
 #======= pongs ========
 #* Antes de tudo, responda os pings dos servidores (funcao para mandar pongs)
 def pongs():
