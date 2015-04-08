@@ -23,6 +23,7 @@ more docs:
         http://garagemhacker.org/wiki/doku.php/projetos/todos/statusbot.txt
 """
 import sys
+import select
 import urllib
 import socket
 from time import sleep
@@ -44,7 +45,7 @@ turnondebug = 'y' # y for show debug anithing else to no debug
 # * this function create connection socket and send signals to irc server like NICK,CHAN,JOIN, etc...
 #irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #em testes AF_INET ipv4, STREAM
 irc = socket.socket()
-def start():
+def connect():
     try:
         irc.connect((ircsrv,port)) #Connect to Server
         irc.recv (4096) #Setting up the Buffer
@@ -143,18 +144,38 @@ def silent():
         print "Meu nick name é", nick
 
 
+#======= killme ========
+#    * kill this bot when you type KILL in bot prompt
+#def killme():
+
+    
+
+
 ########
 #Begin of bot body
 #######
 while True:
+
+    #im using this only for breaking the loop, just in case to exit this bot (3s to type KILL)
+    print "Voce tem 3 segundos para responder!"
+    i, o, e = select.select( [sys.stdin], [], [], 3 )
+    if (i):
+      if sys.stdin.readline().strip() == "KILL":
+        print "Pra mim chega... fui..."
+        break
+        exit()
+    else:
+      print "Voce nao disse nada!"
+
     try:
-    
-        start()
+        connect()
+
         while True: #While Connection is Active
             data = irc.recv (4096) #Make Data the Receive Buffer
             if len(data) == 0: #se o recv for zero quebre este loop e comece de novo
                 print "Xiii caiu!!!"
-                break   
+                break
+
             #======= data split ======#
             # - used by mesgtome function
             data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
