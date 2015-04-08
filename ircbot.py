@@ -40,11 +40,11 @@ turnondebug = 'y' # y for show debug anithing else to no debug
 #Begin functions
 #######
 
-#======= connect ========
+#======= start ========
 # * this function create connection socket and send signals to irc server like NICK,CHAN,JOIN, etc...
 #irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #em testes AF_INET ipv4, STREAM
 irc = socket.socket()
-def connect():
+def start():
     try:
         irc.connect((ircsrv,port)) #Connect to Server
         irc.recv (4096) #Setting up the Buffer
@@ -55,8 +55,7 @@ def connect():
         irc.send('NOTICE ' + chan + ' :Oi eu sou o StatusBot da Garagem. Ainda estou em testes...\r\n') #send notice to the channel
         #irc.send('QUIT :Ill be back...') #my quit message
     except:
-        print "Nao consegui conectar dessa vez, vou tentar de novo na proxima... :("
-
+        print "Nao consegui conectar dessa vez ;( Vou tentar de novo"
 #======= status ========
 # * this function make this bot say to the channel if the HackerSpace are open or closed
 def status():
@@ -148,29 +147,31 @@ def silent():
 #Begin of bot body
 #######
 while True:
-
-    connect()#inicia a conecao e autenticao
-
-    while True: #While Connection is Active
-        data = irc.recv (4096) #Make Data the Receive Buffer
-        if len(data) == 0: #se o recv for zero quebre este loop e comece de novo
-            print "Xiii caiu!!!"
-            break   
+    try:
     
-        #======= data split ======#
-        # - used by mesgtome function
-        data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
+        start()
+        while True: #While Connection is Active
+            data = irc.recv (4096) #Make Data the Receive Buffer
+            if len(data) == 0: #se o recv for zero quebre este loop e comece de novo
+                print "Xiii caiu!!!"
+                break   
+            #======= data split ======#
+            # - used by mesgtome function
+            data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
 
-        #======= Bot Functions ======== # 
-        pongs()#first of all --> respond pings with this pong's
-        voice()#Gives voice mode to all new joiner's
-        mesgtome()#Detect and reply messages to this bot
+            #======= Bot Functions ======== # 
+            pongs()#first of all --> respond pings with this pong's
+            voice()#Gives voice mode to all new joiner's
+            mesgtome()#Detect and reply messages to this bot
 
-        #======= Debug's ======== #
-        if turnondebug == 'y':
-            debug()
-        else:
-            silent()
+            #======= Debug's ======== #
+            if turnondebug == 'y':
+                debug()
+            else:
+                silent()
+    except:
+        print "Alguma coisa deu errado e falhei na conexao... vou reiniciar a conecao AGORA!"
+        continue
 
 
 
