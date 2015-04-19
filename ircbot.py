@@ -57,6 +57,11 @@ def connect():
         #irc.send('QUIT :Ill be back...') #my quit message
     except:
         print "Nao consegui conectar dessa vez ;( Vou tentar de novo"
+        irc.send('QUIT :Ill be back...\r\n') #my quit message
+        ok = irc.getsockname()
+        print ok
+        irc.socket.shutdown(ok)
+        irc.socket.close(ok)
 #======= status ========
 # * this function make this bot say to the channel if the HackerSpace are open or closed
 def status():
@@ -123,6 +128,7 @@ def mesgtome():
 #======= debug ========
 #    * put all debug's you want on loop here ;)
 def debug():
+
     #print data #Print the Data to the console(For debug purposes - HARD WAY TO READ)
     print "Socket data buffer em --> ",len(data)#enable to see Socket buffer size
     count = 0 #best way to read print data
@@ -142,6 +148,7 @@ def silent():
     if data[1] == "001":
         print "Estou agora connectado em",data[0]
         print "Meu nick name é", nick
+
 
 
 #======= killme ========
@@ -174,6 +181,7 @@ while True:
             data = irc.recv (4096) #Make Data the Receive Buffer
             if len(data) == 0: #se o recv for zero quebre este loop e comece de novo
                 print "Xiii caiu!!!"
+                irc.close()
                 break
 
             #======= data split ======#
@@ -192,6 +200,8 @@ while True:
                 silent()
     except:
         print "Alguma coisa deu errado e falhei na conexao... vou reiniciar a conecao AGORA!"
+        irc.send('PRIVMSG ' +chan+ ' :Ill be back...\r\n') #my quit message
+        irc = socket.socket()
         continue
 
 
