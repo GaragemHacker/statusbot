@@ -26,7 +26,7 @@ import sys
 import select
 import urllib
 import socket
-from time import sleep
+import time
 
 #Global Vars
 nick = 'rob0tn1ck' #define nick
@@ -36,7 +36,7 @@ port = 6667 #Define IRC Server Port
 chan = '#debugthisr0bot' #The IRC Channel
 statefile = 'garagenow'
 turnondebug = 'y' # y for show debug anithing else to no debug
-leasetime = 5 * 60 # 5 minutos para espera de pings
+leasetime = 7 * 60 # 7 minutos para espera de pings
 
 ########
 #Begin functions
@@ -92,6 +92,7 @@ def status():
                 irc.send('PRIVMSG ' + chan + " :Yuhuuuuu vamo la galera o HackerSpace esta ABERTO!!!! ;)\r\n")
     except:
             print "Ups... nao consegui resolver nesse, tento mais uma vez na proxima ;)"
+
 #======= pongs ========
 #* Antes de tudo, responda os pings dos servidores (funcao para mandar pongs)
 def pongs():
@@ -99,6 +100,19 @@ def pongs():
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         #print data #somente para debug do pong
         status() #when recive the pong check for new state
+
+#======= expira ========
+#* se nao receber um ping em um periodo menor que o leastime definido, quebra o loop pra reconectar
+#* Quebra e recomeca o socket se nao receber um ping do server no tempo do leasetime
+def expira():
+    if data[0] == 'PING':
+        pingado = time.time()
+        print 'Estou recebendo um ping em:',pingado
+        if (time.time() - pingado) > leastime:
+            print 'Opa... nao recebi ping a mais de',leastime,'entao vou recomecar o socket'
+            return True
+        else:
+            return False
 
 #======= voce ========
 # * this functions discover who you are
@@ -150,6 +164,10 @@ def silent():
         print "Estou agora connectado em",data[0]
         print "Meu nick name é", nick
 
+#======= killme ========
+#    * kill this bot when you type KILL in bot prompt
+#def killme():
+
 ########
 #Begin of bot body
 #######
@@ -175,22 +193,15 @@ while True:
                 print "Xiii caiu!!!"
                 irc.close()
                 break
-                
-            #Quebra e recomeca o socket se nao receber um ping do server no tempo do leasetime
-            if data[0] == 'PING': #se receber um ping 
-                pingado = time.time() #guarde a hora do ultimo ping
-                print 'ultimo ping em:',pingado
-                if (time.time() - pingado) > leasetime: #se a hora atual menos o utlimo ping for maior que o leastime
-                    irc.shutdown() #desligue e feche o socket depois saia do loop para permitir a reconecao
-                    irc.close()
-                    break
 
             #======= data split ======#
-            # - used by mesgtome function
+            # - used by mesgtome function and all function's using data as array
             data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
 
             #======= Bot Functions ======== # 
             pongs()#first of all --> respond pings with this pong's
+            if expira():
+                break
             voice()#Gives voice mode to all new joiner's
             mesgtome()#Detect and reply messages to this bot
 
@@ -200,10 +211,10 @@ while True:
             else:
                 silent()
     except:
-        print "Alguma coisa deu errado e falhei na conexao... vou reiniciar a conecao AGORA!"
-        irc.send('PRIVMSG ' +chan+ ' :Ill be back...\r\n') #my quit message
-        irc = socket.socket()
-        continue
+            print "Alguma coisa deu errado e falhei na conexao... vou reiniciar a conecao AGORA!"
+            irc.send('PRIVMSG ' +chan+ ' :Ill be back...\r\n') #my quit message
+            irc = socket.socket()
+            continue
 
 
 
