@@ -99,20 +99,24 @@ def pongs():
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         #print data #somente para debug do pong
+        pingado = time.time()
+        print 'Estou recebendo um ping em:',pingado
+        if (time.time() - pingado) > leasetime:
+            print 'Opa... nao recebi ping a mais de',leasetime,'entao vou recomecar o socket'
+            irc.shutdown()
+            irc.close()
+            return True
+        else:
+            return False
+
         status() #when recive the pong check for new state
 
 #======= expira ========
 #* se nao receber um ping em um periodo menor que o leastime definido, quebra o loop pra reconectar
 #* Quebra e recomeca o socket se nao receber um ping do server no tempo do leasetime
-def expira():
-    if data[0] == 'PING':
-        pingado = time.time()
-        print 'Estou recebendo um ping em:',pingado
-        if (time.time() - pingado) > leastime:
-            print 'Opa... nao recebi ping a mais de',leastime,'entao vou recomecar o socket'
-            return True
-        else:
-            return False
+#def expira():
+#    if data[0] == 'PING':
+        
 
 #======= voce ========
 # * this functions discover who you are
@@ -168,6 +172,7 @@ def silent():
 #    * kill this bot when you type KILL in bot prompt
 #def killme():
 
+
 ########
 #Begin of bot body
 #######
@@ -199,8 +204,8 @@ while True:
             data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
 
             #======= Bot Functions ======== # 
-            pongs()#first of all --> respond pings with this pong's
-            if expira():
+            #pongs()#first of all --> respond pings with this pong's
+            if pongs():#respond pings and if leastime expires it sends a break to this loop
                 break
             voice()#Gives voice mode to all new joiner's
             mesgtome()#Detect and reply messages to this bot
@@ -215,7 +220,6 @@ while True:
             irc.send('PRIVMSG ' +chan+ ' :Ill be back...\r\n') #my quit message
             irc = socket.socket()
             continue
-
 
 
 
