@@ -170,24 +170,24 @@ def silent():
 
 #======= killme ========
 #    * kill this bot when you type KILL in bot prompt
-#def killme():
-
+def killme():
+#im using this only for breaking the loop, just in case to exit this bot (3s to type KILL)
+    print "Voce tem 3 segundos para responder!"
+    i, o, e = select.select( [sys.stdin], [], [], 3 )
+    if (i):
+      if sys.stdin.readline().strip() == "KILL":
+        print "Pra mim chega... fui..."
+        return True
+    else:
+      print "Voce nao disse nada!"
 
 ########
 #Begin of bot body
 #######
 while True:
 
-    #im using this only for breaking the loop, just in case to exit this bot (3s to type KILL)
-    print "Voce tem 3 segundos para responder!"
-    i, o, e = select.select( [sys.stdin], [], [], 3 )
-    if (i):
-      if sys.stdin.readline().strip() == "KILL":
-        print "Pra mim chega... fui..."
+    if killme(): #se killme retornar True saia do loop
         break
-        exit()
-    else:
-      print "Voce nao disse nada!"
 
     try:
         connect()
@@ -220,6 +220,6 @@ while True:
             irc.send('PRIVMSG ' +chan+ ' :Ill be back...\r\n') #my quit message
             irc = socket.socket()
             continue
-
+exit()
 
 
