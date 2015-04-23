@@ -35,7 +35,8 @@ ircsrv = "irc.freenode.net" #Define IRC Network
 port = 6667 #Define IRC Server Port
 chan = '#debugthisr0bot' #The IRC Channel
 statefile = 'garagenow'
-turnondebug = 'y' # y for show debug anithing else to no debug 
+turnondebug = 'y' # y for show debug anithing else to no debug
+leasetime = 5 * 60 # 5 minutos para espera de pings
 
 ########
 #Begin functions
@@ -149,15 +150,6 @@ def silent():
         print "Estou agora connectado em",data[0]
         print "Meu nick name é", nick
 
-
-
-#======= killme ========
-#    * kill this bot when you type KILL in bot prompt
-#def killme():
-
-    
-
-
 ########
 #Begin of bot body
 #######
@@ -183,6 +175,15 @@ while True:
                 print "Xiii caiu!!!"
                 irc.close()
                 break
+                
+            #Quebra e recomeca o socket se nao receber um ping do server no tempo do leasetime
+            if data[0] == 'PING': #se receber um ping 
+                pingado = time.time() #guarde a hora do ultimo ping
+                print 'ultimo ping em:',pingado
+                if (time.time() - pingado) > leasetime: #se a hora atual menos o utlimo ping for maior que o leastime
+                    irc.shutdown() #desligue e feche o socket depois saia do loop para permitir a reconecao
+                    irc.close()
+                    break
 
             #======= data split ======#
             # - used by mesgtome function
