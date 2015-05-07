@@ -27,6 +27,8 @@ import select
 import urllib
 import socket
 import time
+import threading
+
 
 #Global Vars
 nick = 'rob0tn1ck' #define nick
@@ -44,8 +46,8 @@ leasetime = 7 * 60 # 7 minutos para espera de pings
 
 #======= start ========
 # * this function create connection socket and send signals to irc server like NICK,CHAN,JOIN, etc...
-#irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #em testes AF_INET ipv4, STREAM
-irc = socket.socket()
+irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #em testes AF_INET ipv4, STREAM
+#irc = socket.socket()
 def connect():
     try:
         irc.connect((ircsrv,port)) #Connect to Server
@@ -55,7 +57,7 @@ def connect():
         irc.send('NICKSERV IDENTIFY ' + passw + '\r\n') #msg nickserv identify
         irc.send('JOIN ' + chan + '\r\n') #Join the channel
         irc.send('NOTICE ' + chan + ' :Oi eu sou o StatusBot da Garagem. Ainda estou em testes...\r\n') #send notice to the channel
-        #irc.send('QUIT :Ill be back...') #my quit message
+
     except:
         print "Nao consegui conectar dessa vez ;( Vou tentar de novo"
         irc.send('QUIT :Ill be back...\r\n') #my quit message
@@ -93,20 +95,14 @@ def status():
     except:
             print "Ups... nao consegui resolver nesse, tento mais uma vez na proxima ;)"
 
-#======= checkin ========
-#*Verifica de tempo em tempo se recebeu um ping
-def checkin():
-#Este codigo deve ser melhorado com a funcao expira
-    pingado = time.time()
-    print 'Estou recebendo um ping em:',pingado
-    if (time.time() - pingado) > leasetime:
-        print 'Opa... nao recebi ping a mais de',leasetime,'entao vou recomecar o socket'
-        irc.shutdown()
-        irc.close()
-        return True
-    else:
-        return False
 
+#======= expira ========
+#* O expira e acionado em duas condicoes, se quando recebe um ping depois de 20 minutos
+#* depois de 20 minutos se o expira retornar true deve fazer break no loop para reconcetar
+def expira():
+    if data[0] == 'PING':
+        #if irc.send('PRIVMSG '+nick+" :Acorda !\r\n"):
+        #    return False
 
 #======= pongs ========
 #* Antes de tudo, responda os pings dos servidores (funcao para mandar pongs)
@@ -114,16 +110,22 @@ def pongs():
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         #print data #somente para debug do pong
+        #Este codigo deve ser melhorado com a funcao expira
+        #t = threading.Timer(1200.0, expira)#agenda o expira para rodar daqui 20 minutos
+        #t.start()#inicia a contagem do threading timer
+        pingado = time.time()
+        print 'Estou recebendo um ping em:',pingado
+        if (time.time() - pingado) > leasetime:
+            print 'Opa... nao recebi ping a mais de',leasetime,'entao vou recomecar o socket'
+            t.cancel()
+            irc.shutdown()
+            irc.close()
+            return True
+        else:
+            return False
 
-        checkin() #verify recived pings        
         status() #when recive the pong check for new state
 
-#======= expira ========
-#* se nao receber um ping em um periodo menor que o leastime definido, quebra o loop pra reconectar
-#* Quebra e recomeca o socket se nao receber um ping do server no tempo do leasetime
-#def expira():
-#    if data[0] == 'PING':
-        
 
 #======= voce ========
 # * this functions discover who you are
@@ -206,18 +208,21 @@ while True:
                 irc.close()
                 break
 
+            
             #======= data split ======#
-            # - used by mesgtome function and all function's using data as array
+            # - used by mesgtome function and all function's using data as array            
             data=data.split() #split all data make more easy to process my request's unfortunately little bit more slow ;|    
 
             #======= Bot Functions ======== # 
             #pongs()#first of all --> respond pings with this pong's
             if pongs():#respond pings and if leastime expires it sends a break to this loop
                 break
+            #if expira():#se o expira for true quebre este loop para recomecar
+            #    break
+                
             voice()#Gives voice mode to all new joiner's
             mesgtome()#Detect and reply messages to this bot
-            if checkin():#checkin action and save time
-                break
+            
             #======= Debug's ======== #
             if turnondebug == 'y':
                 debug()
@@ -226,7 +231,8 @@ while True:
     except:
             print "Alguma coisa deu errado e falhei na conexao... vou reiniciar a conecao AGORA!"
             irc.send('PRIVMSG ' +chan+ ' :Ill be back...\r\n') #my quit message
-            irc = socket.socket()
+            irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            #irc = socket.socket()
             continue
 exit()
 
