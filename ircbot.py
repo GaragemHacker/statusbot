@@ -99,8 +99,8 @@ def status():
 #======= expira ========
 #* O expira e acionado em duas condicoes, se quando recebe um ping depois de 20 minutos
 #* depois de 20 minutos se o expira retornar true deve fazer break no loop para reconcetar
-def expira():
-    if data[0] == 'PING':
+#def expira():
+#    if data[0] == 'PING':
         #if irc.send('PRIVMSG '+nick+" :Acorda !\r\n"):
         #    return False
 
