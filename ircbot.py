@@ -93,22 +93,29 @@ def status():
     except:
             print "Ups... nao consegui resolver nesse, tento mais uma vez na proxima ;)"
 
+#======= checkin ========
+#*Verifica de tempo em tempo se recebeu um ping
+def checkin():
+#Este codigo deve ser melhorado com a funcao expira
+    pingado = time.time()
+    print 'Estou recebendo um ping em:',pingado
+    if (time.time() - pingado) > leasetime:
+        print 'Opa... nao recebi ping a mais de',leasetime,'entao vou recomecar o socket'
+        irc.shutdown()
+        irc.close()
+        return True
+    else:
+        return False
+
+
 #======= pongs ========
 #* Antes de tudo, responda os pings dos servidores (funcao para mandar pongs)
 def pongs():
     if data[0] == 'PING': #opa recebi um PING do server
         irc.send('PONG '+ data[1]+ '\r\n') #manda o pong
         #print data #somente para debug do pong
-        pingado = time.time()
-        print 'Estou recebendo um ping em:',pingado
-        if (time.time() - pingado) > leasetime:
-            print 'Opa... nao recebi ping a mais de',leasetime,'entao vou recomecar o socket'
-            irc.shutdown()
-            irc.close()
-            return True
-        else:
-            return False
 
+        checkin() #verify recived pings        
         status() #when recive the pong check for new state
 
 #======= expira ========
@@ -209,7 +216,8 @@ while True:
                 break
             voice()#Gives voice mode to all new joiner's
             mesgtome()#Detect and reply messages to this bot
-
+            if checkin():#checkin action and save time
+                break
             #======= Debug's ======== #
             if turnondebug == 'y':
                 debug()
