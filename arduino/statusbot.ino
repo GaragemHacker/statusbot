@@ -48,6 +48,19 @@ static void get_callback(byte status, word off, word len) {
 }
 
 
+// pisca os leds mostrando que a falha de comunicaçao com o modulo Ethercard.
+static void ErroEthercard() {
+  
+  while (1!=2) { 
+      digitalWrite(ledgreen,  HIGH);
+      digitalWrite(ledred, LOW);
+      delay(500);
+      digitalWrite(ledgreen, LOW);
+      digitalWrite(ledred, HIGH);
+      delay(500);
+  }
+}
+
 //funcao pra ecoar de quem esta me pingando
 static void pingado (byte* ptr) {
   ether.printIp(">>>fui pingado por: ", ptr);
@@ -57,10 +70,15 @@ static void pingado (byte* ptr) {
 
 //Esta funcao para iniciarmos o DHCP
 static void dhcp() {
-  if (ether.begin(sizeof Ethernet::buffer, mymac) == 0)
+  if (ether.begin(sizeof Ethernet::buffer, mymac) == 0) {
     Serial.println(F("Failed to access Ethernet controller"));
-  if (!ether.dhcpSetup())
+    ErroEthercard();
+  };
+  
+  if (!ether.dhcpSetup()) {
     Serial.println(F("DHCP failed"));
+    ErroEthercard();
+  };
 
 //Inicio dos ecos em serial de todos os dados que a placa tiver
 //pequeno loop pra mostar o MAC ADRESS
