@@ -5,7 +5,8 @@ Clever Joke Bot to make the Garage more acessible in the web
 
  * Python Chatter Bot on IRC
  * HackerSpace Door status
- * Yowsup intergation
+ * ~~Yowsup intergation~~
+ * Telegram @ElviraBot
  * WebSite and Wiki hackerspace status
 
 ### status.php
