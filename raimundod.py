@@ -7,7 +7,7 @@ import time
 import requests
 from urlparse import urljoin
 
-token = 'TELEGRAM_BOT_TOKEN'
+token = 'TOKEN'
 base_url = 'https://api.telegram.org/bot'+token+'/'
 headers = {'content-type': 'application/x-www-form-urlencoded'}
 
@@ -18,29 +18,38 @@ def status_garagem():
 	
 	response = requests.get('http://garagemhacker.org/status.txt')
 	if response.status_code != 200:
-		sys.exit(2)
+		print "Nao consegui checar o status"
+		return
+		#sys.exit(2)
 
 	return response.text
 
 	
 
 def get_updates():
+	#import ipdb; ipdb.set_trace()
 	response = requests.get(urljoin(base_url, 'getUpdates'))
 	if response.status_code != 200:
-		sys.exit(1)
+		print "Nao consegui checar os updates"
+		return
+		#sys.exit(1)
 	response = response.json()
-	result = response['result'][-1]
-	message = result['message']
-	if message.has_key('text'):
-		if message['text'].startswith('/status'):
-			status = status_garagem()
-			#import ipdb; ipdb.set_trace()
-			send_message(message['chat']['id'], status, message['message_id'])
-			if status.rstrip() == 'aberto':
-				send_sticker(message['chat']['id'], 'BQADAQADQQADyIsGAAEBJ1h7N54y1wI', message['message_id'])
-			else:
-				send_sticker(message['chat']['id'], 'BQADAQADIAADyIsGAAGeqFpovvSWiwI', message['message_id'])
-
+	size = len(response['result'])
+	if size != 0: 
+		result = response['result'][-1]
+		message = result['message']
+		if message.has_key('text'):
+			if message['text'].startswith('/status'):
+				status = status_garagem()
+				#import ipdb; ipdb.set_trace()
+				send_message(message['chat']['id'], status, message['message_id'])
+				if status.rstrip() == 'aberto':
+					send_sticker(message['chat']['id'], 'BQADAQADQQADyIsGAAEBJ1h7N54y1wI', message['message_id'])
+				else:
+					send_sticker(message['chat']['id'], 'BQADAQADIAADyIsGAAGeqFpovvSWiwI', message['message_id'])
+	else:
+		print "Ops... json esta vazio..."
+		return
 
 def send_sticker(chat_id, sticker, message_id):
 	data_sticker = {
