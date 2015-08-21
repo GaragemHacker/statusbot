@@ -6,7 +6,7 @@ Clever Joke Bot to make the Garage more acessible in the web
  * Python Chatter Bot on IRC
  * HackerSpace Door status
  * ~~Yowsup intergation~~
- * Telegram @ElviraBot
+ * Telegram @ElviraBot(raimundod.py)
  * WebSite and Wiki hackerspace status
 
 ### status.php
@@ -45,6 +45,7 @@ Chatter bot, para notificao de status com WhatsApp e IRC
 
 -------
 
+
 ### lamp.js/lamp.php (<i>lamp_sample.html</i>)
 Pequeno exemplo de como usar a API para colher o estado da garagem.
 O exemplo que usa um javascript colhe o estado do arquivo status.txt e quando aberto mostra uma lampada acesa no html. Quando apagado mostra uma lampada apagada.
@@ -54,3 +55,16 @@ O que esta php faz exatamente a mesma coisa em php :stuck_out_tongue:
 <img src="https://github.com/Garagem-Hacker/statusbot/blob/master/img/lamp.png" /><br>
 <i>Lampada usada no site da <a href="http://www.garagemhacker.org">garagemhacker</a></i>
 
+-------
+
+### raiumundod.py
+
+O raimundo tambem conhecido como @RaimundaBot, e o bot atual do telegram da Garagem. 
+Este bot deve fazer as seguintes funcoes:
+
+ - [x] Verificar o status da garagem se esta aberta o fechada "/status"
+ - [ ] Ecoar as conversar do telegram no canal do irc
+ - [ ] Mostrar quem esta na garagem pelo comando "/quemtala" 
+ - [ ] Dizer algumas frases legais quando for mencionado 
+
+-------
