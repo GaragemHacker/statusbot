@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# This is the telegrambot of GaragemHacker Curitiba HackerSpace
+# It must do this things:
+# 	* show de garagemhacker status is its open or if its close
 
 import sys
 import json 
@@ -63,7 +66,9 @@ def send_sticker(chat_id, sticker, message_id):
 
 	response = requests.post(urljoin(base_url, 'sendSticker'), data=data_sticker, headers=headers)
 	if response.status_code != 200:
-		sys.exit(1)
+		print "Nao consegui manda o sticker"
+		return
+		#sys.exit(1)
 		
 	last_stick_id = message_id
 
@@ -80,16 +85,20 @@ def send_message(chat_id, text, message_id):
 	
 	response = requests.post(urljoin(base_url, 'sendMessage'), data=data, headers=headers)
 	if response.status_code != 200:
-		sys.exit(1)
+		print "Nao consegui mandar a mensagem..."
+		return
+		#sys.exit(1)
 
 	
 	last_message_id = message_id
 
-
-
 def main():
 	while True:
-		get_updates()
+		try:
+			get_updates()
+		except:
+			print "nao consegui dessa vez..."
+			continue
 		time.sleep(1)
 
 
