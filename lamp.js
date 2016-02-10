@@ -12,7 +12,7 @@ window.onload=function start() {
 var xmlhttp, status, logger; //my vars
 //var xmlhttp;
 xmlhttp = new XMLHttpRequest();
-//xmlhttp.open('GET', 'http://www.garagemhacker.org/status.txt', true); //this request for outsider's require enable CORS
+//xmlhttp.open('GET', 'http://garagemhacker.org/status.txt', true); //this request for outsider's require enable CORS
 xmlhttp.open('GET', 'status.txt', true);
 xmlhttp.send();
 
